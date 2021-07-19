@@ -21,7 +21,6 @@ class CreateUsersTable extends Migration
             $table->string('email');
             $table->string('password');
             $table->boolean('status');
-            $table->string('api_key');
             $table->timestamps();
         });
     }
