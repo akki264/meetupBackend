@@ -8,6 +8,5 @@ class UsersConnect extends Model
 {
     //
     protected $table = 'usersconnect';
-    protected $fillable = ['friend_id', 'user_id', 'description', 'status'];
-    
+    protected $fillable = ['friend_id', 'user_id'];
 }

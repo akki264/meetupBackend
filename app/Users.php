@@ -1,4 +1,5 @@
 <?php
+
 namespace App;
 
 use Illuminate\Auth\Authenticatable;
@@ -12,26 +13,26 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class Users extends Model implements AuthenticatableContract, AuthorizableContract, JWTSubject
 {
-   use Authenticatable, Authorizable;
+    use Authenticatable, Authorizable;
 
-   protected $fillable = ['first_name','last_name','username','email','password','status'];
-   protected $hidden = [
-   'password',
-   'api_key'
-   ];
-   /*
+    protected $fillable = ['first_name', 'last_name', 'username', 'email', 'password'];
+    protected $hidden = [
+        'password',
+
+    ];
+    /*
    * Get All firneds
    *
    */
-  protected $redirectTo = '/';
+    protected $redirectTo = '/';
 
-  
-   public function getFriends()
-   {
+
+    public function getFriends()
+    {
         return $this->hasMany(UsersConnect::class, 'user_id', 'id');
-   }
+    }
 
-   public function getJWTIdentifier()
+    public function getJWTIdentifier()
     {
         return $this->getKey();
     }
@@ -45,5 +46,4 @@ class Users extends Model implements AuthenticatableContract, AuthorizableContra
     {
         return [];
     }
-
 }

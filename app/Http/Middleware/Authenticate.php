@@ -10,7 +10,7 @@ class Authenticate
     /**
      * The authentication guard factory instance.
      *
-     * @var \Illuminate\Contracts\Auth\Factory
+     * 
      */
     protected $auth;
 
