@@ -47,8 +47,8 @@ class AuthController extends Controller
         if (!$token) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
-
-        return $this->respondWithToken($token);
+        $user = Auth::user();
+        return response()->json(['user' => $user, 'token' => $token, 'message' => 'CREATED'], 200);
     }
 
     public function register(Request $request)
@@ -58,7 +58,7 @@ class AuthController extends Controller
 
             'first_name' => 'required',
             'last_name' => 'required',
-            'username' => 'required',
+
             'email' => 'required|email|unique:users',
             'password' => 'required',
         ]);
@@ -66,8 +66,8 @@ class AuthController extends Controller
         $user = new Users;
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;
-        $user->username = $request->username;
-        $user->status = 1;
+
+
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
         $user->save();

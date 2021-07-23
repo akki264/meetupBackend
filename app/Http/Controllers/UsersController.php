@@ -30,7 +30,7 @@ class UsersController extends Controller
             $query->select('friend_id')->from('usersconnect')->where('user_id', $currentUser['id']);
         })->get();
 
-        $friends = Users::find($currentUser['id'])->getFriends()->get();
+        $friends = Users::find($currentUser['id'])->getFriends()->join('users', 'users.id', 'usersconnect.friend_id')->get();
 
         return response()->json(['friends' => $friends, 'users' => $users, 'currentUser' => $currentUser], 201);
     }
@@ -40,31 +40,36 @@ class UsersController extends Controller
         $currentUser = Auth::user();
 
         $this->validate($request, ['friendId' => 'required']);
+        if ($request->unFriend) {
+            UsersConnect::where('user_id', $currentUser['id'])->where('friend_id', $request->friendId)->delete();
+            UsersConnect::where('friend_id', $currentUser['id'])->where('user_id', $request->friendId)->delete();
+        } else {
 
-        $findFriend = Users::find($currentUser['id'])->getFriends()->where('friend_id', $request->friendId)->first();
-        if ($findFriend) {
+            $findFriend = Users::find($currentUser['id'])->getFriends()->where('friend_id', $request->friendId)->first();
+            if ($findFriend) {
 
-            $friends = Users::find($currentUser['id'])->getFriends()->get();
-            return response()->json(['friends' => $friends, 'message' => 'already friend'], 200);
+                $friends = Users::find($currentUser['id'])->getFriends()->get();
+                return response()->json(['friends' => $friends, 'message' => 'already friend'], 200);
+            }
+
+            UsersConnect::create([
+
+                "user_id" => $currentUser->id,
+                "friend_id" => $request->friendId,
+
+            ]);
+
+            UsersConnect::create([
+
+                "user_id" => $request->friendId,
+                "friend_id" => $currentUser->id,
+
+            ]);
         }
 
-        UsersConnect::create([
 
-            "user_id" => $currentUser->id,
-            "friend_id" => $request->friendId,
 
-        ]);
-
-        UsersConnect::create([
-
-            "user_id" => $request->friendId,
-            "friend_id" => $currentUser->id,
-
-        ]);
-
-        $friends = Users::find($currentUser['id'])->getFriends()->get();
-
-        return response()->json(['friends' => $friends, 'message' => 'new friend has been connected', 200]);
+        return response()->json(['message' => 'new friend has been connected', 200]);
     }
 
     public function addSchedule(Request $request)
@@ -97,7 +102,7 @@ class UsersController extends Controller
         $schedules = Schedule::where(
             "user_id",
             $currentUser['id']
-        )->orWhere('friend_id', $currentUser['id'])->get();
+        )->orWhere('friend_id', $currentUser['id'])->with(['friendUser', 'userData'])->get();
 
         return response()->json(['schedules' => $schedules, 'message' => 'all schedules'], 200);
     }
@@ -114,7 +119,7 @@ class UsersController extends Controller
 
     public function deleteSchedule(Request $request)
     {
-        Schedule::where('id', $request->id)->delete()->first();
+        Schedule::where('id', $request->id)->delete();
         return response()->json(['message' => 'Schedule Deleted'], 200);
     }
     public function updateSchedule(Request $request)

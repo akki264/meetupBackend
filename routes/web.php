@@ -24,9 +24,9 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->post('register/', 'AuthController@register');
     $router->get('users/', 'UsersController@users');
     $router->post('getConnect/', 'UsersController@connectUser');
-    $router->get('schedule/', 'UserController@getSchedule');
-    $router->get('openschedule/', 'UsersContoller@openSchedule');
-    $router->post('addschedule/', 'UsersContoller@addSchedule');
-    $router->delete('deleteschedule/', 'UsersContoller@deleteSchedule');
-    $router->put('updateschedule/', 'UsersContoller@updateSchedule');
+    $router->get('schedule/', 'UsersController@getSchedule');
+    $router->get('openschedule/', 'UsersController@openSchedule');
+    $router->post('addschedule/', 'UsersController@addSchedule');
+    $router->delete('deleteschedule/{id}', 'UsersController@deleteSchedule');
+    $router->put('updateschedule/{id}', 'UsersController@updateSchedule');
 });
