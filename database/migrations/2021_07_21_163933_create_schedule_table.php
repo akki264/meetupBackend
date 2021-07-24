@@ -22,8 +22,7 @@ class CreateScheduleTable extends Migration
             $table->string('title');
             $table->dateTime('meeting_time');
             $table->string('description');
-            $table->unsignedBigInteger('updated_by')->nullable();
-            $table->foreign('updated_by')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
+
 
             $table->timestamps();
         });

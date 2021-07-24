@@ -20,10 +20,16 @@ $router->get('/', function () use ($router) {
 
 $router->group(['prefix' => 'api'], function () use ($router) {
 
+    //Authentication APIs
     $router->post('login/', 'AuthController@authenticate');
     $router->post('register/', 'AuthController@register');
+
+    //User related APIs
     $router->get('users/', 'UsersController@users');
     $router->post('getConnect/', 'UsersController@connectUser');
+
+
+    //Scheduling APIs
     $router->get('schedule/', 'UsersController@getSchedule');
     $router->get('openschedule/', 'UsersController@openSchedule');
     $router->post('addschedule/', 'UsersController@addSchedule');

@@ -14,27 +14,31 @@ use Illuminate\Console\Scheduling\Schedule as SchedulingSchedule;
 class UsersController extends Controller
 {
 
+
     public function __construct()
     {
         $this->middleware('auth:api');
     }
 
 
-
+    //To list Users and Friends
     public function users(Request $request)
     {
 
+
         $currentUser = Auth::user();
 
-        $users = Users::where('email', '!=', $currentUser['email'])->whereNotIn('id', function ($query) use ($currentUser) {
+        $users = Users::where('id', '!=', $currentUser['id'])->whereNotIn('id', function ($query) use ($currentUser) {
             $query->select('friend_id')->from('usersconnect')->where('user_id', $currentUser['id']);
         })->get();
 
+        // DB::enableQueryLog();
         $friends = Users::find($currentUser['id'])->getFriends()->join('users', 'users.id', 'usersconnect.friend_id')->get();
+        // dd(DB::getQueryLog());
 
         return response()->json(['friends' => $friends, 'users' => $users, 'currentUser' => $currentUser], 201);
     }
-
+    //API for user connect
     public function connectUser(Request $request)
     {
         $currentUser = Auth::user();
@@ -45,12 +49,8 @@ class UsersController extends Controller
             UsersConnect::where('friend_id', $currentUser['id'])->where('user_id', $request->friendId)->delete();
         } else {
 
-            $findFriend = Users::find($currentUser['id'])->getFriends()->where('friend_id', $request->friendId)->first();
-            if ($findFriend) {
 
-                $friends = Users::find($currentUser['id'])->getFriends()->get();
-                return response()->json(['friends' => $friends, 'message' => 'already friend'], 200);
-            }
+
 
             UsersConnect::create([
 
@@ -71,6 +71,7 @@ class UsersController extends Controller
 
         return response()->json(['message' => 'new friend has been connected', 200]);
     }
+    //API to add new schedule entry
 
     public function addSchedule(Request $request)
     {
@@ -95,6 +96,8 @@ class UsersController extends Controller
         return response()->json(['schedule' => $schedule, 'message' => 'New Schedule Created'], 200);
     }
 
+    //To show list of Schedules
+
     public function getSchedule(Request $request)
     {
 
@@ -106,6 +109,8 @@ class UsersController extends Controller
 
         return response()->json(['schedules' => $schedules, 'message' => 'all schedules'], 200);
     }
+
+    //API to data for selected schedule
     public function openSchedule(Request $request)
     {
         $schedule = Schedule::where('id', $request->id)->first();
@@ -117,11 +122,13 @@ class UsersController extends Controller
         }
     }
 
+    //API to Delete schedule
     public function deleteSchedule(Request $request)
     {
         Schedule::where('id', $request->id)->delete();
         return response()->json(['message' => 'Schedule Deleted'], 200);
     }
+    //To edit schedule
     public function updateSchedule(Request $request)
     {
         $currentUser = Auth::user();

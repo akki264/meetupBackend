@@ -13,13 +13,8 @@ class AuthController extends Controller
 
 {
 
-    public function __construct()
 
-    {
 
-        //  $this->middleware('auth:api');
-
-    }
 
     /**
 
@@ -30,6 +25,9 @@ class AuthController extends Controller
      * @return \Illuminate\Http\Response
 
      */
+
+    // API for authentication/login
+
 
     public function authenticate(Request $request)
     {
@@ -42,15 +40,17 @@ class AuthController extends Controller
 
         ]);
 
+        // dd($request);
         $credentials = $request->only(['email', 'password']);
         $token = Auth::attempt($credentials);
         if (!$token) {
-            return response()->json(['message' => 'Unauthorized'], 401);
+            return response()->json(['message' => 'User ID and Password are incorrect'], 404);
         }
         $user = Auth::user();
         return response()->json(['user' => $user, 'token' => $token, 'message' => 'CREATED'], 200);
     }
 
+    //User Registration APIs
     public function register(Request $request)
     {
 
