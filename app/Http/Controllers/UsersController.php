@@ -137,7 +137,7 @@ class UsersController extends Controller
 
         if ($schedule) {
             $schedule->update($request->only(['title', 'meeting_time', 'description']));
-            $schedule->updated_by = $currentUser->id;
+
             $schedule->save();
 
             return response()->json(['schedule' => $schedule, 'message' => 'schedule updated'], 200);
