@@ -71,6 +71,29 @@ class UsersController extends Controller
 
         return response()->json(['message' => 'new friend has been connected', 200]);
     }
+
+    //API to edit profile
+
+    public function editProfile(Request $request)
+    {
+        $this->validate($request, [
+            'first_name' => 'required',
+            'last_name' => 'required'
+
+        ]);
+        $currentUser = Auth::user();
+        $edit = Users::where('id', $currentUser['id'])->first();
+
+        if ($edit) {
+            $edit->update($request->only(['first_name', 'last_name']));
+            return response()->json(['user' => $edit, 'message' => 'Profile has been updated', 200]);
+        }
+        return response()->json(['message' => 'User not found', 404]);
+    }
+
+
+
+
     //API to add new schedule entry
 
     public function addSchedule(Request $request)

@@ -28,6 +28,9 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->get('users/', 'UsersController@users');
     $router->post('getConnect/', 'UsersController@connectUser');
 
+    //Edit profile
+    $router->put('editProfile/', 'UsersController@editProfile');
+
 
     //Scheduling APIs
     $router->get('schedule/', 'UsersController@getSchedule');
