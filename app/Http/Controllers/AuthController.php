@@ -60,6 +60,7 @@ class AuthController extends Controller
             'last_name' => 'required',
 
             'email' => 'required|email|unique:users',
+            'usertimezone' => 'required',
             'password' => 'required',
         ]);
 
@@ -67,7 +68,7 @@ class AuthController extends Controller
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;
 
-
+        $user->usertimezone = $request->usertimezone;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
         $user->save();

@@ -15,7 +15,7 @@ class Users extends Model implements AuthenticatableContract, AuthorizableContra
 {
     use Authenticatable, Authorizable;
 
-    protected $fillable = ['first_name', 'last_name', 'username', 'email', 'password'];
+    protected $fillable = ['first_name', 'last_name', 'username', 'email', 'password', 'usertimezone'];
     protected $hidden = [
         'password',
 

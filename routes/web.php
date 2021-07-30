@@ -30,6 +30,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 
     //Edit profile
     $router->put('editProfile/', 'UsersController@editProfile');
+    $router->put('updatetimezone/', 'UsersController@updateTimezone');
 
 
     //Scheduling APIs
